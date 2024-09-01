@@ -1,35 +1,42 @@
 package org.cafevariome.util;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class Authentication {
+    private final ClientConfig config;
     private String accessToken;
     private String refreshToken;
-    private final ClientConfig config;
-
-    private static class KeycloakConfig {
-        private String url;
-        private String realm;
-        private String clientID;
-        private String redirectURI;
-    }
 
     public Authentication(ClientConfig config) {
         this.config = config;
+    }
+
+    // Helper method to parse query parameters from a URI
+    private static Map<String, String> getQueryMap(String query) {
+        Map<String, String> map = new HashMap<>();
+        for (String param : query.split("&")) {
+            String[] entry = param.split("=");
+            if (entry.length > 1) {
+                map.put(entry[0], entry[1]);
+            } else {
+                map.put(entry[0], "");
+            }
+        }
+        return map;
     }
 
     public boolean refreshToken() {
@@ -208,17 +215,10 @@ public class Authentication {
         return this.accessToken;
     }
 
-    // Helper method to parse query parameters from a URI
-    private static Map<String, String> getQueryMap(String query) {
-        Map<String, String> map = new HashMap<>();
-        for (String param : query.split("&")) {
-            String[] entry = param.split("=");
-            if (entry.length > 1) {
-                map.put(entry[0], entry[1]);
-            } else {
-                map.put(entry[0], "");
-            }
-        }
-        return map;
+    private static class KeycloakConfig {
+        private String url;
+        private String realm;
+        private String clientID;
+        private String redirectURI;
     }
 }
