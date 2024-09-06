@@ -1,6 +1,6 @@
 package org.cafevariome.model;
 
-public class AccessRequest extends ClientModel{
+public class AccessRequest extends AppModel {
     public String requestID;
     public String firstName;
     public String lastName;

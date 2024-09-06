@@ -17,11 +17,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Authentication {
-    private final ClientConfig config;
+    private final AppConfig config;
     private String accessToken;
     private String refreshToken;
 
-    public Authentication(ClientConfig config) {
+    public Authentication(AppConfig config) {
         this.config = config;
     }
 

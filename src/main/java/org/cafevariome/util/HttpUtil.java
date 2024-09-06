@@ -1,19 +1,19 @@
 package org.cafevariome.util;
 
+import org.cafevariome.model.AppModel;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-import org.cafevariome.model.ClientModel;
-
 public class HttpUtil {
     private final Authentication auth;
-    private final ClientConfig config;
+    private final AppConfig config;
     private final HttpClient httpClient;
 
-    public HttpUtil(Authentication auth, ClientConfig config) {
+    public HttpUtil(Authentication auth, AppConfig config) {
         this.auth = auth;
         this.config = config;
 
@@ -38,7 +38,7 @@ public class HttpUtil {
     public <T> T getModel(String path, Class<T> clazz) {
         try {
             HttpResponse<String> response = get(path);
-            return ClientModel.fromJson(response.body(), clazz);
+            return AppModel.fromJson(response.body(), clazz);
         } catch (Exception e) {
             throw new RuntimeException("Error getting model from " + path + ": " + e.getMessage(), e);
         }
@@ -47,7 +47,7 @@ public class HttpUtil {
     public <T> List<T> getModels(String path, Class<T> clazz) {
         try {
             HttpResponse<String> response = get(path);
-            return ClientModel.fromJsonList(response.body(), clazz);
+            return AppModel.fromJsonList(response.body(), clazz);
         } catch (Exception e) {
             throw new RuntimeException("Error getting models from " + path + ": " + e.getMessage(), e);
         }
@@ -61,7 +61,7 @@ public class HttpUtil {
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public boolean postModel(String path, ClientModel model) {
+    public boolean postModel(String path, AppModel model) {
         try {
             String jsonString = model.toJson();
             HttpResponse<String> response = post(path, jsonString);
@@ -85,7 +85,7 @@ public class HttpUtil {
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public boolean patchModel(String path, ClientModel model) {
+    public boolean patchModel(String path, AppModel model) {
         try {
             String jsonString = model.toJson();
             HttpResponse<String> response = patch(path, jsonString);
@@ -109,7 +109,7 @@ public class HttpUtil {
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public boolean putModel(String path, ClientModel model) {
+    public boolean putModel(String path, AppModel model) {
         try {
             String jsonString = model.toJson();
             HttpResponse<String> response = put(path, jsonString);

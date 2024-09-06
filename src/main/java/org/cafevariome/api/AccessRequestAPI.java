@@ -1,13 +1,13 @@
 package org.cafevariome.api;
 
-import java.util.List;
-
 import org.cafevariome.model.AccessRequest;
-import org.cafevariome.util.ClientConfig;
+import org.cafevariome.util.AppConfig;
 import org.cafevariome.util.HttpUtil;
 
+import java.util.List;
+
 public class AccessRequestAPI extends ClientAPI {
-    public AccessRequestAPI(ClientConfig config, HttpUtil httpUtil) {
+    public AccessRequestAPI(AppConfig config, HttpUtil httpUtil) {
         super(config, httpUtil);
     }
 

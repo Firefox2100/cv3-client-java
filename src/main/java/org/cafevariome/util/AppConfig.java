@@ -3,14 +3,14 @@ package org.cafevariome.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ClientConfig {
+public class AppConfig {
     public String host;
     public int port;
     public String protocol;
     public Logger logger;
     public String redirectURI;
 
-    public ClientConfig(String host) {
+    public AppConfig(String host) {
         this.host = host;
         this.port = 443;
         this.protocol = "https";
@@ -18,7 +18,7 @@ public class ClientConfig {
         this.redirectURI = "http://localhost:49430";
     }
 
-    public ClientConfig(ClientConfigBuilder builder) {
+    public AppConfig(ClientConfigBuilder builder) {
         this.host = builder.host;
         this.port = builder.port;
         this.protocol = builder.protocol;
@@ -65,8 +65,8 @@ public class ClientConfig {
             return this;
         }
 
-        public ClientConfig build() {
-            return new ClientConfig(this);
+        public AppConfig build() {
+            return new AppConfig(this);
         }
     }
 }

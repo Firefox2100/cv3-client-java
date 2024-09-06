@@ -1,8 +1,8 @@
 package org.cafevariome;
 
 import org.cafevariome.api.AccessRequestAPI;
+import org.cafevariome.util.AppConfig;
 import org.cafevariome.util.Authentication;
-import org.cafevariome.util.ClientConfig;
 import org.cafevariome.util.HttpUtil;
 
 public class CafeVariomeClient {
@@ -10,7 +10,7 @@ public class CafeVariomeClient {
 
     public final AccessRequestAPI accessRequest;
 
-    public CafeVariomeClient(ClientConfig config) {
+    public CafeVariomeClient(AppConfig config) {
         this.auth = new Authentication(config);
         HttpUtil httpUtil = new HttpUtil(this.auth, config);
 
