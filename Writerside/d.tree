@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="d"
+                 name="Documentation"
+                  start-page="cafe-variome-v3-java-client.md">
+
+    <toc-element topic="cafe-variome-v3-java-client.md"/>
+</instance-profile>
