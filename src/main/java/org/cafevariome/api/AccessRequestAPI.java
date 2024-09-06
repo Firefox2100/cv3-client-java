@@ -34,7 +34,7 @@ public class AccessRequestAPI extends ClientAPI {
 
     public List<AccessRequest> getAll() {
         try {
-            return httpUtil.getModels(config.getAdminURI() + "/access_requests", AccessRequest.class);
+            return httpUtil.getModels(config.getAdminURI() + "/access_requests/", AccessRequest.class);
         } catch (Exception e) {
             config.logger.error("Error getting access requests: {}", e.getMessage());
             return null;
@@ -52,12 +52,10 @@ public class AccessRequestAPI extends ClientAPI {
 
     public boolean delete(String requestID) {
         try {
-            httpUtil.delete(config.getAdminURI() + "/access_requests/" + requestID);
+            return httpUtil.deleteModel(config.getAdminURI() + "/access_requests/" + requestID);
         } catch (Exception e) {
             config.logger.error("Error deleting access request: {}", e.getMessage());
             return false;
         }
-
-        return true;
     }
 }

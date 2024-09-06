@@ -1,12 +1,12 @@
 package org.cafevariome.model;
 
 public class AccessRequest extends AppModel {
-    public String requestID;
-    public String firstName;
-    public String lastName;
-    public String email;
-    public String affiliation;
-    public String justification;
+    private String requestID;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String affiliation;
+    private String justification;
 
     public AccessRequest() {
     }
