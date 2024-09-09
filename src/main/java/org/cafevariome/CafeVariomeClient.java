@@ -7,17 +7,21 @@ import org.cafevariome.util.Authentication;
 import org.cafevariome.util.HttpUtil;
 
 public class CafeVariomeClient {
-    public final Authentication auth;
+    private final Authentication authentication;
 
     private final AccessRequestAPI accessRequestAPI;
     private final BeaconEndpointAPI beaconEndpointAPI;
 
     public CafeVariomeClient(AppConfig config) {
-        this.auth = new Authentication(config);
-        HttpUtil httpUtil = new HttpUtil(this.auth, config);
+        this.authentication = new Authentication(config);
+        HttpUtil httpUtil = new HttpUtil(this.authentication, config);
 
         this.accessRequestAPI = new AccessRequestAPI(config, httpUtil);
         this.beaconEndpointAPI = new BeaconEndpointAPI(config, httpUtil);
+    }
+
+    public Authentication auth() {
+        return authentication;
     }
 
     public AccessRequestAPI accessRequest() {
