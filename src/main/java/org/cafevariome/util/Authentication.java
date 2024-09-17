@@ -1,5 +1,6 @@
 package org.cafevariome.util;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,6 +9,8 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -83,7 +86,14 @@ public class Authentication {
     }
 
     public boolean login(String userName, String password) {
-        HttpClient client = HttpClient.newHttpClient();
+        // Set up the CookieManager
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        java.net.CookieHandler.setDefault(cookieManager);
+
+        HttpClient client = HttpClient.newBuilder()
+                .cookieHandler(cookieManager)
+                .build();
 
         // Load the Keycloak configuration from the server
         HttpRequest request = HttpRequest.newBuilder()
@@ -108,7 +118,7 @@ public class Authentication {
                 keycloakConfig.url,
                 keycloakConfig.realm,
                 keycloakConfig.clientID,
-                URLEncoder.encode(keycloakConfig.redirectURI, StandardCharsets.UTF_8));
+                URLEncoder.encode(config.redirectURI, StandardCharsets.UTF_8));
 
         String authorizationCode;
 
@@ -172,23 +182,21 @@ public class Authentication {
             postData.put("redirect_uri", config.redirectURI);
             postData.put("code", authorizationCode);
 
-            String form = postData.entrySet()
-                    .stream()
-                    .map(entry -> URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8) + "=" + URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8))
-                    .collect(Collectors.joining("&"));
+            // Convert the postData map to a JSON string using ObjectMapper
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(postData);
 
-            // Send the POST request
+            // Send the POST request with JSON body
             HttpRequest postRequest = HttpRequest.newBuilder()
                     .uri(URI.create(config.getAdminURI() + "/auth/token"))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .POST(HttpRequest.BodyPublishers.ofString(form))
+                    .header("Content-Type", "application/json")  // Set content type to JSON
+                    .POST(HttpRequest.BodyPublishers.ofString(json))  // Send JSON data
                     .build();
 
             HttpResponse<String> response = client.send(postRequest, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
                 // Parse the JSON response to extract the access token and refresh token
-                ObjectMapper mapper = new ObjectMapper();
                 Map<String, Object> jsonResponse = mapper.readValue(response.body(), Map.class);
 
                 this.accessToken = (String) jsonResponse.get("access_token");
@@ -206,7 +214,7 @@ public class Authentication {
         }
     }
 
-    public boolean login(String refreshToken) {
+        public boolean login(String refreshToken) {
         this.refreshToken = refreshToken;
         return refreshToken();
     }
@@ -218,7 +226,34 @@ public class Authentication {
     private static class KeycloakConfig {
         private String url;
         private String realm;
+
+        @JsonProperty("client_id")
         private String clientID;
-        private String redirectURI;
+
+        public KeycloakConfig() {}
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getRealm() {
+            return realm;
+        }
+
+        public void setRealm(String realm) {
+            this.realm = realm;
+        }
+
+        public String getClientID() {
+            return clientID;
+        }
+
+        public void setClientID(String clientID) {
+            this.clientID = clientID;
+        }
     }
 }

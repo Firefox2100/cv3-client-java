@@ -20,14 +20,13 @@ public class AppConfig {
 
     public AppConfig(ClientConfigBuilder builder) {
         this.host = builder.host;
-        this.port = builder.port;
         this.protocol = builder.protocol;
         this.logger = builder.logger;
         this.redirectURI = builder.redirectURI;
     }
 
     public String getURI() {
-        return protocol + "://" + host + ":" + port;
+        return protocol + "://" + host;
     }
 
     public String getAdminURI() {
@@ -36,18 +35,12 @@ public class AppConfig {
 
     public static class ClientConfigBuilder {
         private final String host;
-        private int port = 443;
         private String protocol = "https";
         private Logger logger = LoggerFactory.getLogger("CafeVariomeClient");
         private String redirectURI = "http://localhost:49430";
 
         public ClientConfigBuilder(String host) {
             this.host = host;
-        }
-
-        public ClientConfigBuilder setPort(int port) {
-            this.port = port;
-            return this;
         }
 
         public ClientConfigBuilder setProtocol(String protocol) {
